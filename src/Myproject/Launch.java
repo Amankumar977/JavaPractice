@@ -1,35 +1,36 @@
 package Myproject;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 public class Launch {
-    public void backtrack(List<List<Integer>> result, List<Integer> perm, int nums[]) {
-        if (perm.size() == nums.length) {
-            result.add(new ArrayList<>(perm));
-        }
-        for (int i = 0; i < nums.length; i++) {
-            if (perm.contains(nums[i])) {
-                continue;
-            }
-            perm.add(nums[i]);
-            backtrack(result, perm, nums);
-            perm.remove(perm.size() - 1);
-        }
-    }
+ 
+	public static void main(String[] args) {
+	   int arr [] = {1,2,3,4,3};
+	   int n = arr.length, i =1, j= n-1;
+	   System.out.println(helper(arr, i, j, n));
+	}
 
-    public List<List<Integer>> permute(int[] nums) {
-        List<List<Integer>> result = new ArrayList<>();
-        backtrack(result, new ArrayList<>(), nums);
-        return result;
-    }
+	private static int helper(int[] arr, int i, int j, int n) {
+	    int dp[][] = new int [n][n];
+	    for(int [] row:dp) {
+	    	Arrays.fill(row, -1);
+	    }
+		return minOper(arr, i, j, dp);
+	}
 
-    public static void main(String[] args) {
-    	Launch solution = new Launch();
-        int[] nums = {1, 2, 3}; // Change this array as needed
-        List<List<Integer>> permutations = solution.permute(nums);
-        for (List<Integer> perm : permutations) {
-            System.out.println(perm);
-        }
-    }
-}
+	private static int minOper(int[] arr, int i, int j, int[][] dp) {
+	    if(i ==j) {
+	    	return 0;
+	    }
+	    if(dp[i][j] != -1) {
+	    	return dp[i][j];
+	    }
+	    int minopr = Integer.MAX_VALUE;
+	    for(int k =i ; k<j; k++) {
+	    	int operations = minOper(arr, i, k, dp)+ minOper(arr, k+1, j, dp)+arr[i-1]*arr[k]*arr[j];
+	    	minopr = Math.min(operations, minopr);
+	    }
+	    dp[i][j] = minopr;
+		return minopr;
+	}
+}  
